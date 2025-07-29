@@ -1,20 +1,20 @@
-name: 'beforeprod.com deployment action'
-description: 'Deploys your project to beforeprod.com: fast and easy (feasy)'
+name: 'BeforeProd Deployment Action'
+description: 'Deploys your application to BeforeProd and updates PR descriptions with deployment URLs'
 inputs:
-  platform: #GO or #JS
-    description: Whether your project runs on GO or JS
+  platform:
+    description: 'The platform your application runs on (JS or GO)'
     required: true
     default: 'JS'
-  build_folder: # where your app has been build
-    description: The folder in which you put the build artefacts e.g. /build
+  build_folder:
+    description: 'The folder containing your build artifacts'
     required: true
     default: './build'
 outputs:
-  url: #The URL at which your preview app is hosted by beforeprod.com
-    description: This is the url at which your app is hosted by werft
+  url:
+    description: 'The URL where your application is deployed'
     value: ${{ steps.beforeprod.outputs.url }}
-  time: #The time when the deployment was completed
-    description: The timestamp when the deployment was completed
+  time:
+    description: 'The timestamp when the deployment was completed'
     value: ${{ steps.beforeprod.outputs.time }}
 runs:
   using: 'composite'
@@ -76,7 +76,6 @@ runs:
               console.log(`Here is at least your preview app URL: ${url}`);
               return;
             }
-
 
             const prNumber = prs.data[0].number;
             const currentBody = prs.data[0].body || ''; // Handle case where PR has no description

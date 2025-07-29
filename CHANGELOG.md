@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Added remote action support with root-level action.yml files
+- Added simplified action structure for both local and remote usage
+- Added single shpr binary shared between deployment and cleanup actions
 - Added test workflows for PR deployment and cleanup
 - Added support for Go 1.24.1 in test workflow
 - Added Code of Conduct
@@ -16,6 +19,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated shpr binary to v0.0.37 with improved deployment features
 
 ### Changed
+- Simplified action structure by removing duplicate local actions
+- Updated workflows to use root-level action files
+- Updated documentation to reflect single action definition approach
 - Updated test workflow to use actions/checkout@v4 and actions/setup-go@v4
 - Optimized workflow to only run on pull request events (opened, synchronize, reopened)
 - Improved action and step naming for better clarity and user experience
@@ -31,6 +37,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed build and deployment configuration for Go applications
 
 ### Removed
+- Removed local action directory structure (.github/actions/)
+- Removed duplicate action definitions
 - Removed local shpr binary build in favor of distribution from werft repo releases (still local but put in from releases)
 - Removed redundant Docker-related files and configurations
 

@@ -12,7 +12,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Cleanup deployment
-        uses: ./.github/actions/cleanup
+        uses: ./cleanup-action.yml
         env:
           BP_USER: ${{ secrets.BP_USER }}
           BP_PASSWORD: ${{ secrets.BP_PASSWORD }}

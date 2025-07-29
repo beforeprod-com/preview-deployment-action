@@ -26,7 +26,7 @@ jobs:
         run: env GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -v -o ./go-test-app/build/app ./go-test-app/main.go
 
       - name: Deploy your preview app to beforeprod
-        uses: ./.github/actions/preview_app
+        uses: ./
         id: beforeprod
         with:
           build_folder: './go-test-app/build'
