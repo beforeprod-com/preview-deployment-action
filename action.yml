@@ -1,8 +1,16 @@
+<<<<<<< HEAD
 name: 'BeforeProd Action'
 description: 'Deploys your application to BeforeProd and updates PR descriptions, or cleans up deployments when PRs are closed'
 inputs:
   action:
     description: 'The action to perform (deploy or cleanup)'
+=======
+name: 'BeforeProd Deployment Action'
+description: 'Deploys your application to BeforeProd and updates PR descriptions with deployment URLs'
+inputs:
+  platform:
+    description: 'The platform your application runs on (JS or GO)'
+>>>>>>> origin/main
     required: true
     default: 'deploy'
   platform:
@@ -11,7 +19,11 @@ inputs:
     default: 'JS'
   build_folder:
     description: 'The folder containing your build artifacts'
+<<<<<<< HEAD
     required: false
+=======
+    required: true
+>>>>>>> origin/main
     default: './build'
 outputs:
   url:

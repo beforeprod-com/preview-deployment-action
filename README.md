@@ -33,7 +33,11 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Create a preview app on beforeprod.com
+<<<<<<< HEAD
         uses: beforeprod-com/preview-deployment-action@main
+=======
+        uses: beforeprod-com/preview-deployment-action-tmp@main
+>>>>>>> origin/main
         with:
           action: 'deploy'
           platform: 'JS'  # or 'GO' for Go applications
@@ -63,9 +67,13 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Cleanup deployment
+<<<<<<< HEAD
         uses: beforeprod-com/preview-deployment-action@main
         with:
           action: 'cleanup'
+=======
+        uses: beforeprod-com/preview-deployment-action-tmp/cleanup-action.yml@main
+>>>>>>> origin/main
         env:
           BP_USER: ${{ secrets.BP_USER }}
           BP_PASSWORD: ${{ secrets.BP_PASSWORD }}
@@ -75,6 +83,7 @@ jobs:
 
 The action is organized into a single unified component:
 
+<<<<<<< HEAD
 **Unified Action** (`action.yml`)
 - Handles both deployment and cleanup based on the `action` input
 - Updates PR descriptions with deployment URLs
@@ -84,6 +93,23 @@ The action is organized into a single unified component:
 ## Inputs
 
 ### Action Inputs
+=======
+1. **Deployment Action** (`action.yml`)
+   - Handles the deployment of your application
+   - Updates PR descriptions with deployment URLs
+   - Triggered on `pull_request` events (opened, synchronize, reopened)
+   - Contains the BeforeProd CLI binary
+
+2. **Cleanup Action** (`cleanup-action.yml`)
+   - Automatically cleans up deployments when PRs are closed
+   - Removes the deployment from BeforeProd
+   - Triggered on `pull_request` events with type `closed`
+   - Contains the BeforeProd CLI binary
+
+## Inputs
+
+### Deployment Action Inputs
+>>>>>>> origin/main
 
 | Input | Description | Required | Default |
 |-------|-------------|----------|---------|
