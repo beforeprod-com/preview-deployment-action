@@ -1,5 +1,5 @@
-name: 'beforeprod.com deployment cleanup'
-description: 'Cleans up beforeprod.com deployments when PRs are closed'
+name: 'BeforeProd Cleanup Action'
+description: 'Cleans up BeforeProd deployments when PRs are closed'
 runs:
   using: 'composite'
   steps:

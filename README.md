@@ -17,7 +17,7 @@ This GitHub Action automatically deploys your application to [BeforeProd](https:
 
 ### Deployment Action
 
-The deployment action (`.github/actions/preview_app`) handles the deployment of your application. Add the following to your workflow file (e.g., `.github/workflows/deploy.yml`):
+You can use this action directly from this repository:
 
 ```yaml
 name: BeforeProd preview app action
@@ -33,17 +33,20 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Create a preview app on beforeprod.com
-        uses: ./.github/actions/preview_app
+        uses: beforeprod-com/preview-deployment-action-tmp@main
         with:
           platform: 'JS'  # or 'GO' for Go applications
           build_folder: './build'  # path to your build artifacts
+        env:
+          BP_USER: ${{ secrets.BP_USER }}
+          BP_PASSWORD: ${{ secrets.BP_PASSWORD }}
 ```
 
 > **Note**: The action will automatically update PR descriptions with deployment URLs. The action only runs on pull request events (opened, updated, or reopened) to ensure deployments are only created when needed.
 
 ### Cleanup Action
 
-The cleanup action (`.github/actions/cleanup`) automatically removes deployments when PRs are closed. Add this to a separate workflow file (e.g., `.github/workflows/cleanup.yml`):
+The cleanup action automatically removes deployments when PRs are closed. Add this to a separate workflow file (e.g., `.github/workflows/cleanup.yml`):
 
 ```yaml
 name: Cleanup PR Deployments
@@ -59,7 +62,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Cleanup deployment
-        uses: ./.github/actions/cleanup
+        uses: beforeprod-com/preview-deployment-action-tmp/cleanup-action.yml@main
         env:
           BP_USER: ${{ secrets.BP_USER }}
           BP_PASSWORD: ${{ secrets.BP_PASSWORD }}
@@ -69,23 +72,21 @@ jobs:
 
 The action is organized into two main components:
 
-1. **Preview App Action** (`.github/actions/preview_app/`)
+1. **Deployment Action** (`action.yml`)
    - Handles the deployment of your application
    - Updates PR descriptions with deployment URLs
    - Triggered on `pull_request` events (opened, synchronize, reopened)
-   - Contains its own copy of the BeforeProd CLI binary
+   - Contains the BeforeProd CLI binary
 
-2. **Cleanup Action** (`.github/actions/cleanup/`)
+2. **Cleanup Action** (`cleanup-action.yml`)
    - Automatically cleans up deployments when PRs are closed
    - Removes the deployment from BeforeProd
    - Triggered on `pull_request` events with type `closed`
-   - Contains its own copy of the BeforeProd CLI binary
-
-Each action maintains its own copy of the BeforeProd CLI binary, allowing for independent version management and updates.
+   - Contains the BeforeProd CLI binary
 
 ## Inputs
 
-### Preview App Action Inputs
+### Deployment Action Inputs
 
 | Input | Description | Required | Default |
 |-------|-------------|----------|---------|
@@ -98,7 +99,7 @@ The cleanup action doesn't require any inputs as it automatically extracts the n
 
 ## Outputs
 
-### Preview App Action Outputs
+### Deployment Action Outputs
 
 | Output | Description |
 |--------|-------------|
