@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Added unified action structure for both deployment and cleanup
+- Added action input parameter to control deployment vs cleanup behavior
 - Added remote action support with root-level action.yml files
 - Added simplified action structure for both local and remote usage
 - Added single shpr binary shared between deployment and cleanup actions
@@ -19,9 +21,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated shpr binary to v0.0.37 with improved deployment features
 
 ### Changed
+- Unified deployment and cleanup into single action.yml file
 - Simplified action structure by removing duplicate local actions
-- Updated workflows to use root-level action files
-- Updated documentation to reflect single action definition approach
+- Updated workflows to use unified action with action parameter
+- Updated documentation to reflect unified action approach
 - Updated test workflow to use actions/checkout@v4 and actions/setup-go@v4
 - Optimized workflow to only run on pull request events (opened, synchronize, reopened)
 - Improved action and step naming for better clarity and user experience
@@ -31,12 +34,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Enhanced PR comment functionality using pull request review API
 
 ### Fixed
+- Fixed cleanup action failure by consolidating into unified action structure
 - Fixed Docker action configuration for proper input handling
 - Fixed URL capture and output from shpr app start command
 - Fixed environment variable handling in actions
 - Fixed build and deployment configuration for Go applications
 
 ### Removed
+- Removed separate cleanup-action.yml file
 - Removed local action directory structure (.github/actions/)
 - Removed duplicate action definitions
 - Removed local shpr binary build in favor of distribution from werft repo releases (still local but put in from releases)

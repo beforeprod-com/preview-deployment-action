@@ -29,6 +29,7 @@ jobs:
         uses: ./
         id: beforeprod
         with:
+          action: 'deploy'
           build_folder: './go-test-app/build'
           platform: 'GO'
         env:
