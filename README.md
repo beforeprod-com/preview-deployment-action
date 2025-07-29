@@ -9,7 +9,7 @@ This GitHub Action automatically deploys your application to [BeforeProd](https:
 - 🔄 Automatic cleanup of deployments when PRs are closed
 - 🛠️ Support for both Go and JavaScript applications
 - 🔒 Secure credential handling
-- 📦 Independent binary management for each action (currently because of KISS)
+- 📦 Single action for both deployment and cleanup
 - 📊 Preview URL logging for direct branch deployments (no PR required)
 - 🔄 Robust error handling with automatic retries for PR updates
 
@@ -33,8 +33,9 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Create a preview app on beforeprod.com
-        uses: beforeprod-com/preview-deployment-action-tmp@main
+        uses: beforeprod-com/preview-deployment-action@main
         with:
+          action: 'deploy'
           platform: 'JS'  # or 'GO' for Go applications
           build_folder: './build'  # path to your build artifacts
         env:
@@ -62,7 +63,9 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Cleanup deployment
-        uses: beforeprod-com/preview-deployment-action-tmp/cleanup-action.yml@main
+        uses: beforeprod-com/preview-deployment-action@main
+        with:
+          action: 'cleanup'
         env:
           BP_USER: ${{ secrets.BP_USER }}
           BP_PASSWORD: ${{ secrets.BP_PASSWORD }}
@@ -70,32 +73,23 @@ jobs:
 
 ## Action Structure
 
-The action is organized into two main components:
+The action is organized into a single unified component:
 
-1. **Deployment Action** (`action.yml`)
-   - Handles the deployment of your application
-   - Updates PR descriptions with deployment URLs
-   - Triggered on `pull_request` events (opened, synchronize, reopened)
-   - Contains the BeforeProd CLI binary
-
-2. **Cleanup Action** (`cleanup-action.yml`)
-   - Automatically cleans up deployments when PRs are closed
-   - Removes the deployment from BeforeProd
-   - Triggered on `pull_request` events with type `closed`
-   - Contains the BeforeProd CLI binary
+**Unified Action** (`action.yml`)
+- Handles both deployment and cleanup based on the `action` input
+- Updates PR descriptions with deployment URLs
+- Automatically cleans up deployments when PRs are closed
+- Contains the BeforeProd CLI binary
 
 ## Inputs
 
-### Deployment Action Inputs
+### Action Inputs
 
 | Input | Description | Required | Default |
 |-------|-------------|----------|---------|
-| `platform` | The platform your application runs on (`JS` or `GO`) | Yes | `JS` |
-| `build_folder` | The folder containing your build artifacts | Yes | `./build` |
-
-### Cleanup Action Inputs
-
-The cleanup action doesn't require any inputs as it automatically extracts the necessary information from the PR description.
+| `action` | The action to perform (`deploy` or `cleanup`) | Yes | `deploy` |
+| `platform` | The platform your application runs on (`JS` or `GO`) | No | `JS` |
+| `build_folder` | The folder containing your build artifacts | No | `./build` |
 
 ## Outputs
 

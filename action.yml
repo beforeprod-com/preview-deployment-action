@@ -1,13 +1,17 @@
-name: 'BeforeProd Deployment Action'
-description: 'Deploys your application to BeforeProd and updates PR descriptions with deployment URLs'
+name: 'BeforeProd Action'
+description: 'Deploys your application to BeforeProd and updates PR descriptions, or cleans up deployments when PRs are closed'
 inputs:
+  action:
+    description: 'The action to perform (deploy or cleanup)'
+    required: true
+    default: 'deploy'
   platform:
     description: 'The platform your application runs on (JS or GO)'
-    required: true
+    required: false
     default: 'JS'
   build_folder:
     description: 'The folder containing your build artifacts'
-    required: true
+    required: false
     default: './build'
 outputs:
   url:
@@ -20,6 +24,7 @@ runs:
   using: 'composite'
   steps:
     - name: Deploy with shpr
+      if: inputs.action == 'deploy'
       id: beforeprod
       shell: sh
       run: |
@@ -47,6 +52,7 @@ runs:
         ${{ github.action_path }}/shpr app list
 
     - name: Update PR description
+      if: inputs.action == 'deploy'
       uses: actions/github-script@v7
       env:
         REPO: ${{ github.repository }}
@@ -115,3 +121,67 @@ runs:
               await sleep(retryDelay);
             }
           }
+
+    - name: Extract deployment info
+      if: inputs.action == 'cleanup'
+      id: extract
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+          async function extractDeploymentInfo() {
+            const prNumber = context.payload.pull_request.number;
+            const pr = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: prNumber
+            });
+
+            const prBody = pr.data.body || '';
+
+            // Extract the deployment URL from the PR body
+            const urlMatch = prBody.match(/https:\/\/[^\s]*\.app\.beforeprod\.com/);
+            if (!urlMatch) {
+              console.log('No deployment URL found in PR description, skipping cleanup');
+              return null;
+            }
+
+            const url = urlMatch[0];
+            const appAlias = url.match(/https:\/\/([^\.]+)\.app\.beforeprod\.com/)[1];
+            console.log(`Found app alias: ${appAlias}`);
+
+            return appAlias;
+          }
+
+          const maxRetries = 3;
+          const retryDelay = 2000; // 2 seconds
+
+          for (let attempt = 1; attempt <= maxRetries; attempt++) {
+            try {
+              const appAlias = await extractDeploymentInfo();
+              if (appAlias) {
+                core.setOutput('app_alias', appAlias);
+                console.log('Successfully extracted deployment info');
+                break; // Success, exit the retry loop
+              }
+              return; // No URL found, exit early
+            } catch (error) {
+              console.error(`Attempt ${attempt}/${maxRetries} failed:`, error);
+
+              if (attempt === maxRetries) {
+                core.warning('Failed to extract deployment info after all retry attempts');
+                break;
+              }
+
+              console.log(`Retrying in ${retryDelay/1000} seconds...`);
+              await sleep(retryDelay);
+            }
+          }
+
+    - name: Stop deployment
+      if: inputs.action == 'cleanup' && steps.extract.outputs.app_alias
+      shell: sh
+      run: |
+        echo "Running shpr app stop ${{ steps.extract.outputs.app_alias }}..."
+        ${{ github.action_path }}/shpr app stop ${{ steps.extract.outputs.app_alias }}
