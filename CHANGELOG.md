@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Bumped test workflows and README examples to `actions/checkout@v7` and `actions/setup-go@v7` (`actions/github-script@v9` already in use in `action.yml`)
+
 ### Added
 - Added unified action structure for both deployment and cleanup
 - Added action input parameter to control deployment vs cleanup behavior
@@ -17,7 +20,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for Go 1.24.1 in test workflow
 - Added Code of Conduct
 - Added comprehensive publishing guide (removed)
-- Added workflow permissions requirement documentation
+- Documented required workflow `permissions` for PR description updates (`pull-requests: write`)
+- Documented secrets setup, cleanup read permissions, and that merge conflicts block `pull_request` workflows
 - Updated shpr binary to v0.0.37 with improved deployment features
 
 ### Changed
@@ -30,7 +34,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved action and step naming for better clarity and user experience
 - Updated documentation to reflect PR-only deployment strategy
 - Improved attribution and branding
-- Updated README with new features and improvements
+- Rewrote root README (removed stale merge-conflict markers; examples use `beforeprod-com/preview-deployment-action`)
+- Example/test workflows now declare explicit `permissions` blocks
+- Replaced outdated `.github/README.md` with a pointer to the root README
 - Enhanced PR comment functionality using pull request review API
 
 ### Fixed
@@ -39,6 +45,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed URL capture and output from shpr app start command
 - Fixed environment variable handling in actions
 - Fixed build and deployment configuration for Go applications
+- Clarified that missing `permissions.pull-requests: write` causes `403` on PR body updates even when deploy succeeds
 
 ### Removed
 - Removed separate cleanup-action.yml file
