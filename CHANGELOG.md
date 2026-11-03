@@ -8,9 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- `SHPR_VERSION` file recording the bundled CLI release tag (`shpr_v0.0.41`)
+- `SHPR_VERSION` file recording the bundled CLI release tag (`shpr_v0.0.43`)
 
 ### Changed
+- Bundled `shpr` binary updated to **`shpr_v0.0.43`**
 - Bundled `shpr` binary updated to **`shpr_v0.0.41`** (Improved args handling for stop deployments)
 - Bundled `shpr` binary updated to **`shpr_v0.0.40`** (Improved args handling for deployments)
 - `action.yml`: `actions/github-script` **v7 → v9** (Node 24; clears Node 20 deprecation warnings)
